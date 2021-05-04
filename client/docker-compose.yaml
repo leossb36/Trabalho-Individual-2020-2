@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      target: "development-stage"
+    ports:
+      - "8080:8080"
+    volumes:
+      - .:/app
+
+    command: /bin/sh -c "yarn && quasar dev"
+
+    networks:
+      - task-service
+      - default
+networks:
+  task-service:
+    external:
+      name: task-service
