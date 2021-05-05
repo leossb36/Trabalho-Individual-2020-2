@@ -1,0 +1,75 @@
+image: node:12
+
+stages:
+  - build
+  - test
+  - lint
+
+buildFrontend:
+  stage: build
+  script:
+    - yarn install --prefer-offline --cache-folder .yarn
+    - yarn install --only=dev --no-shrinkwrap && yarn run build
+  cache:
+    key: "$CI_BUILD_REF_NAME"
+    paths:
+      - .yarn
+      - node_modules/
+
+testFrontend:
+  stage: test
+  script:
+    - yarn install --prefer-offline --cache-folder .yarn
+    - yarn test:unit:ci
+  cache:
+    key: "$CI_BUILD_REF_NAME"
+    paths:
+      - .yarn
+      - node_modules/
+
+lintFrontend:
+  stage: lint
+  image: node:12-alpine
+  script:
+    - cd client/
+    - yarn && yarn lint
+
+
+buildBackend:
+  stage: build
+  image: python3.9
+  script:
+    - echo "Building backend container..."
+    - docker-compose build
+
+testBackend:
+  image: python:3.9
+  stage: test
+  services:
+    - postgres:latest
+  variables:
+    POSTGRES_DB: myproject
+    POSTGRES_USER: myuser
+    POSTGRES_PASSWORD: password
+    DB_NAME: myproject
+    DB_USER: myuser
+    DB_PASS: password
+  before_script:
+    - pip install pytest
+    - pip install -r requirements.txt
+  script:
+    - cd api/
+    - ./manage.py makemigrations
+    - ./manage.py migrate
+    - ./manage.py test
+
+lintBackend:
+  image: python:3.9
+  stage: lint
+  before_script:
+    - pip install pylint
+  script:
+    - cd api/
+    - pylint user_service/
+    - pylint settings/
+  allow_failure: true
