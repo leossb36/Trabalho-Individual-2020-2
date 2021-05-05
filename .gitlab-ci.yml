@@ -7,6 +7,9 @@ stages:
 
 buildFrontend:
   stage: build
+  image: docker:stable
+  services:
+    - docker:stable-dind
   script:
     - cd client/
     - docker build -t gces_front:latest .
