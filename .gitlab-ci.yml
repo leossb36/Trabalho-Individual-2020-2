@@ -50,9 +50,8 @@ testBackend:
     DB_USER: myuser
     DB_PASS: password
   before_script:
-    - cd api/
     - pip install pytest
-    - pip install -r requirements.txt
+    - pip install -r ./api/requirements.txt
   script:
     - python ./api/manage.py makemigrations
     - python ./api/manage.py migrate
