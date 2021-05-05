@@ -66,5 +66,5 @@ lintBackend:
     - pip install pylint
   script:
     - cd api/
-    - pylint user_service/
-    - pylint settings/
+    - pylint api/
+    - pylint task/
