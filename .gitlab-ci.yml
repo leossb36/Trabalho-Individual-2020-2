@@ -8,7 +8,8 @@ stages:
 buildFrontend:
   stage: build
   script:
-    - docker build -f client/Dockerfile -t gcesFront:latest .
+    - cd client/
+    - docker build -t gces_front:latest .
 
 testFrontend:
   stage: test
@@ -35,7 +36,8 @@ buildBackend:
   services:
     - docker:stable-dind
   script:
-    - docker build -f api/Dockerfile -t gcesBack:latest .
+    - cd api/
+    - docker build -t gces_back:latest .
 
 testBackend:
   image: python:3.9
