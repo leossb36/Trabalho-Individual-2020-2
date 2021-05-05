@@ -8,6 +8,7 @@ stages:
 buildFrontend:
   stage: build
   script:
+    - cd client/
     - yarn install --prefer-offline --cache-folder .yarn
     - yarn install --only=dev --no-shrinkwrap && yarn run build
   cache:
@@ -19,13 +20,14 @@ buildFrontend:
 testFrontend:
   stage: test
   script:
+    - cd client/
     - yarn install --prefer-offline --cache-folder .yarn
     - yarn test:unit:ci
   cache:
     key: "$CI_BUILD_REF_NAME"
     paths:
-      - .yarn
-      - node_modules/
+      - client/.yarn
+      - client/node_modules/
 
 lintFrontend:
   stage: lint
@@ -37,7 +39,9 @@ lintFrontend:
 
 buildBackend:
   stage: build
-  image: python3.9
+  image: docker:stable
+  services:
+    - docker:stable-dind
   script:
     - echo "Building backend container..."
     - docker-compose build
