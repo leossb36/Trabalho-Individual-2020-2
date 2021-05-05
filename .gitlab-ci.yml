@@ -9,19 +9,13 @@ buildFrontend:
   stage: build
   script:
     - cd client/
-    - yarn install --prefer-offline --cache-folder .yarn
-    - yarn install --only=dev --no-shrinkwrap && yarn run build
-  cache:
-    key: "$CI_BUILD_REF_NAME"
-    paths:
-      - .yarn
-      - node_modules/
+    - - docker build -t gcesFront:latest .
 
 testFrontend:
   stage: test
   script:
     - cd client/
-    - yarn install --prefer-offline --cache-folder .yarn
+    - yarn global add @vue/cli && yarn global add @quasar/cli
     - yarn test:unit:ci
   cache:
     key: "$CI_BUILD_REF_NAME"
@@ -36,15 +30,13 @@ lintFrontend:
     - cd client/
     - yarn && yarn lint
 
-
 buildBackend:
   stage: build
   image: docker:stable
   services:
     - docker:stable-dind
   script:
-    - echo "Building backend container..."
-    - docker-compose build
+    - docker build -t gcesBack:latest .
 
 testBackend:
   image: python:3.9
@@ -59,6 +51,7 @@ testBackend:
     DB_USER: myuser
     DB_PASS: password
   before_script:
+    - cd api/
     - pip install pytest
     - pip install -r requirements.txt
   script:
