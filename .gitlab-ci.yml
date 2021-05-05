@@ -1,23 +1,23 @@
 stages:
-  # - build
-  # - test
+  - build
+  - test
   - lint
 
-# buildFrontend:
-#   stage: build
-#   image: docker:stable
-#   services:
-#     - docker:stable-dind
-#   script:
-#     - cd client/
-#     - docker build -t gces_front:latest .
+buildFrontend:
+  stage: build
+  image: docker:stable
+  services:
+    - docker:stable-dind
+  script:
+    - cd client/
+    - docker build -t gces_front:latest .
 
-# testFrontend:
-#   stage: test
-#   script:
-#     - cd client/
-#     - yarn global add @vue/cli && yarn global add @quasar/cli
-#     - quasar test --unit jest --dev="-m pwa"
+testFrontend:
+  stage: test
+  script:
+    - cd client/
+    - yarn global add @vue/cli && yarn global add @quasar/cli
+    - quasar test --unit jest --dev="-m pwa"
 
 lintFrontend:
   stage: lint
@@ -26,34 +26,34 @@ lintFrontend:
     - cd client/
     - yarn && yarn lint
 
-# buildBackend:
-#   stage: build
-#   image: docker:stable
-#   services:
-#     - docker:stable-dind
-#   script:
-#     - cd api/
-#     - docker build -t gces_back:latest .
+buildBackend:
+  stage: build
+  image: docker:stable
+  services:
+    - docker:stable-dind
+  script:
+    - cd api/
+    - docker build -t gces_back:latest .
 
-# testBackend:
-#   image: python:3.9
-#   stage: test
-#   services:
-#     - postgres:latest
-#   variables:
-#     POSTGRES_DB: myproject
-#     POSTGRES_USER: myuser
-#     POSTGRES_PASSWORD: password
-#     DB_HOST: postgres
-#     DB_USER: myuser
-#     DB_PASS: password
-#   before_script:
-#     - pip install pytest
-#     - pip install -r ./api/requirements.txt
-#   script:
-#     - ./api/manage.py makemigrations
-#     - ./api/manage.py migrate
-#     - ./api/manage.py test
+testBackend:
+  image: python:3.9
+  stage: test
+  services:
+    - postgres:latest
+  variables:
+    POSTGRES_DB: myproject
+    POSTGRES_USER: myuser
+    POSTGRES_PASSWORD: password
+    DB_HOST: postgres
+    DB_USER: myuser
+    DB_PASS: password
+  before_script:
+    - pip install pytest
+    - pip install -r ./api/requirements.txt
+  script:
+    - ./api/manage.py makemigrations
+    - ./api/manage.py migrate
+    - ./api/manage.py test
 
 lintBackend:
   image: python:3.9
