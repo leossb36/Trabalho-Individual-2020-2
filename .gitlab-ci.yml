@@ -19,12 +19,7 @@ testFrontend:
   script:
     - cd client/
     - yarn global add @vue/cli && yarn global add @quasar/cli
-    - yarn test:unit:ci
-  cache:
-    key: "$CI_BUILD_REF_NAME"
-    paths:
-      - client/.yarn
-      - client/node_modules/
+    - quasar test --unit jest --dev="-m pwa"
 
 lintFrontend:
   stage: lint
@@ -60,9 +55,9 @@ testBackend:
     - pip install -r requirements.txt
   script:
     - cd api/
-    - ./manage.py makemigrations
-    - ./manage.py migrate
-    - ./manage.py test
+    - python ./manage.py makemigrations
+    - python ./manage.py migrate
+    - python ./manage.py test
 
 lintBackend:
   image: python:3.9
@@ -73,4 +68,3 @@ lintBackend:
     - cd api/
     - pylint user_service/
     - pylint settings/
-  allow_failure: true
