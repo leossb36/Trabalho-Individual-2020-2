@@ -44,7 +44,7 @@ testBackend:
     POSTGRES_DB: myproject
     POSTGRES_USER: myuser
     POSTGRES_PASSWORD: password
-    DB_NAME: myproject
+    DB_HOST: postgres
     DB_USER: myuser
     DB_PASS: password
   before_script:
